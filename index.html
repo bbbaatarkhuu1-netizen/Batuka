@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReadUp - Learn English Through Stories</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+/* ==================== PREMIUM MODERN CSS ==================== */
+:root {
+  --bg: #0a0e27;
+  --bg-secondary: #0f1535;
+  --surface: #151b3f;
+  --surface-alt: #1a2156;
+  --border: rgba(139, 149, 231, 0.1);
+  --border-light: rgba(139, 149, 231, 0.2);
+  --text: #e8e4dc;
+  --text-secondary: #a0a8c0;
+  --text-tertiary: #7a8299;
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --accent-light: #e0e7ff;
+  --success: #10b981;
+  --success-light: rgba(16, 185, 129, 0.1);
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --danger-light: rgba(239, 68, 68, 0.1);
+  --blue: #3b82f6;
+  --purple: #8b5cf6;
+  --cyan: #06b6d4;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Animated background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Icons */
+.ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+.ic svg {
+  width: 1em;
+  height: 1em;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.ic-sm svg { width: 14px; height: 14px; }
+.ic-lg svg { width: 24px; height: 24px; }
+
+/* ==================== HEADER ==================== */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 14, 39, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.logo {
+  font-family: 'Lora', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-tab {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-tab:hover {
+  color: var(--text);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.nav-tab.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%);
+  color: var(--accent);
+  border-color: var(--border-light);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+}
+
+.nav-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  font-family: 'IBM Plex Mono', monospace;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* ==================== SCREENS ==================== */
+main {
+  position: relative;
+  z-index: 1;
+}
+
+.screen {
+  display: none;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== LIBRARY SECTION ==================== */
+.library-header {
+  padding: 40px 24px 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.library-title {
+  font-family: 'Lora', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.library-sub {
+  font-size: 1rem;
+  color: var(--text-tertiary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.filter-row {
+  display: flex;
+  gap: 12px;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.filter-btn {
+  padding: 8px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  border-radius: 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+  border-color: transparent;
+  color: white;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+}
+
+.article-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.article-card {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-alt) 100%);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.article-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.article-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
+}
+
+.article-card:hover::before {
+  opacity: 1;
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-title {
+  font-family: 'Lora', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  word-break: break-word;
+}
+
+.card-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.level-pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.level-A1 {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.level-A2 {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+.level-B1 {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+}
+
+.card-topic {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+/* ==================== TOAST NOTIFICATION ==================== */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-alt) 100%);
+  color: var(--text);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 16px 24px;
+  font-size: 0.95rem;
+  z-index: 600;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  box-shadow: var(--shadow-xl);
+  backdrop-filter: blur(10px);
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ==================== BUTTONS ==================== */
+.btn-primary {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  padding: 12px 24px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--accent);
+}
+
+/* ==================== READER ==================== */
+.reader-topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 56px;
+  z-index: 90;
+  background: rgba(10, 14, 39, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.back-btn {
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.back-btn:hover {
+  background: var(--surface-alt);
+  border-color: var(--border-light);
+}
+
+.reader-title-bar {
+  font-family: 'Lora', serif;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reader-progress {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.reader-body {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px 60px;
+}
+
+.reader-main-title {
+  font-family: 'Lora', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 32px;
+  background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.reading-text {
+  font-size: 1.1rem;
+  line-height: 1.9;
+  color: var(--text);
+}
+
+/* Clickable words */
+.w {
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s;
+  padding: 0 2px;
+  background: rgba(99, 102, 241, 0);
+}
+
+.w:hover {
+  background: rgba(99, 102, 241, 0.2);
+  text-shadow: 0 0 1px var(--accent);
+}
+
+.w.seen {
+  color: var(--accent);
+}
+
+.w.in-vocab {
+  border-bottom: 2px solid var(--success);
+  color: var(--success);
+}
+
+/* ==================== POPUP ==================== */
+.word-popup {
+  position: fixed;
+  z-index: 500;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-alt) 100%);
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  padding: 0;
+  max-width: 300px;
+  min-width: 240px;
+  box-shadow: var(--shadow-xl);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s;
+  transform: translateY(-8px) scale(0.95);
+  backdrop-filter: blur(10px);
+}
+
+.word-popup.show {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0) scale(1);
+}
+
+.popup-inner {
+  padding: 16px 18px;
+}
+
+.popup-word {
+  font-family: 'Lora', serif;
+  font-size: 1.3rem;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.popup-type {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.popup-mn {
+  font-size: 1rem;
+  color: var(--text);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.popup-ex {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  font-style: italic;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.popup-add-btn {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%);
+  border: 1px solid var(--border-light);
+  color: var(--accent);
+  border-radius: 8px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.popup-add-btn:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.2) 100%);
+}
+
+.popup-add-btn.added {
+  background: var(--success-light);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+/* ==================== VOCAB SCREEN ==================== */
+.vocab-screen-body {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.vocab-screen-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.vocab-screen-title {
+  font-family: 'Lora', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.vocab-screen-sub {
+  font-size: 0.95rem;
+  color: var(--text-tertiary);
+  margin-bottom: 28px;
+}
+
+.vocab-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.vc {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-alt) 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 140px;
+  backdrop-filter: blur(10px);
+}
+
+.vc:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.15);
+}
+
+.vc-en {
+  font-family: 'Lora', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.vc-mn {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.vc-type {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ==================== QUIZ ==================== */
+.quiz-body {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.quiz-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.quiz-list-title {
+  font-family: 'Lora', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.quiz-item {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-alt) 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.quiz-item:hover {
+  border-color: var(--accent);
+  transform: translateX(4px);
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.1);
+}
+
+.quiz-item-body {
+  flex: 1;
+}
+
+.quiz-item-title {
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.quiz-item-meta {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+.quiz-item-score {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--success);
+  font-weight: 600;
+}
+
+/* Question Card */
+.q-card {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-alt) 100%);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  margin-bottom: 28px;
+  backdrop-filter: blur(10px);
+}
+
+.q-text {
+  font-family: 'Lora', serif;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  color: var(--text);
+}
+
+.q-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.q-opt {
+  padding: 14px 16px;
+  background: var(--surface-alt);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 500;
+}
+
+.q-opt:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: rgba(99, 102, 241, 0.1);
+  transform: translateX(2px);
+}
+
+.q-opt.correct {
+  background: var(--success-light);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.q-opt.wrong {
+  background: var(--danger-light);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.q-opt:disabled {
+  cursor: default;
+}
+
+.q-fb {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  display: none;
+  border-left: 4px solid;
+}
+
+.q-fb.show {
+  display: block;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.q-fb.ok {
+  background: var(--success-light);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.q-fb.bad {
+  background: var(--danger-light);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .library-title {
+    font-size: 1.8rem;
+  }
+
+  .article-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reader-body {
+    padding: 32px 16px 60px;
+  }
+
+  .reader-main-title {
+    font-size: 1.6rem;
+  }
+
+  .quiz-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-tabs {
+    gap: 2px;
+    overflow-x: auto;
+  }
+
+  .nav-tab {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 12px 16px;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  .nav-tab {
+    display: none;
+  }
+
+  .nav-tab:first-child {
+    display: flex;
+  }
+
+  .library-title {
+    font-size: 1.4rem;
+  }
+
+  .reader-main-title {
+    font-size: 1.3rem;
+  }
+
+  .q-card {
+    padding: 20px;
+  }
+
+  .vocab-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="ic ic-lg"><i data-lucide="book-open"></i></span>
+    ReadUp
+  </div>
+  <nav class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('library',this)">
+      <span class="ic"><i data-lucide="library"></i></span>
+      <span>Library</span>
+      <span class="nav-badge" id="libraryBadge" style="display:none;">0</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('vocab',this)">
+      <span class="ic"><i data-lucide="layers"></i></span>
+      <span>Vocabulary</span>
+      <span class="nav-badge" id="vocabBadge" style="display:none;">0</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('quiz',this)">
+      <span class="ic"><i data-lucide="file-text"></i></span>
+      <span>Tests</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('grammar',this)">
+      <span class="ic"><i data-lucide="book"></i></span>
+      <span>Grammar</span>
+    </button>
+  </nav>
+</header>
+
+<main>
+  <div class="toast" id="toast"></div>
+
+  <!-- LIBRARY -->
+  <div class="screen active" id="scr-library">
+    <div class="library-header">
+      <h1 class="library-title">📚 Reading Library</h1>
+      <p class="library-sub">Click any word to see its meaning. Add it to your vocabulary to remember it better.</p>
+    </div>
+
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="filterArticles('all',this)">All Levels</button>
+      <button class="filter-btn" onclick="filterArticles('A1',this)">A1 Beginner</button>
+      <button class="filter-btn" onclick="filterArticles('A2',this)">A2 Elementary</button>
+      <button class="filter-btn" onclick="filterArticles('B1',this)">B1 Intermediate</button>
+    </div>
+
+    <div class="article-grid" id="articleGrid"></div>
+  </div>
+
+  <!-- VOCABULARY -->
+  <div class="screen" id="scr-vocab">
+    <div class="vocab-screen-body">
+      <div class="vocab-screen-header">
+        <h2 class="vocab-screen-title">📖 My Vocabulary</h2>
+        <div style="display:flex; gap:12px;">
+          <button class="btn-secondary" onclick="openCustomWordModal()">➕ Add Word</button>
+          <button class="btn-primary" onclick="startStudy()">🧠 Study</button>
+        </div>
+      </div>
+      <p class="vocab-screen-sub">Words you've saved from your reading.</p>
+      <div class="vocab-cards-grid" id="vocabCardsGrid"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="scr-quiz">
+    <div class="quiz-body">
+      <div class="quiz-list-header">
+        <h2 class="quiz-list-title">🎯 Tests & Quizzes</h2>
+        <button class="btn-primary" onclick="toggleAddForm()">➕ Create Test</button>
+      </div>
+      <div id="quizCards"></div>
+    </div>
+  </div>
+
+  <!-- GRAMMAR -->
+  <div class="screen" id="scr-grammar">
+    <div style="max-width: 900px; margin: 0 auto; padding: 40px 24px 80px;">
+      <h2 class="vocab-screen-title" style="margin-bottom: 28px;">📚 Grammar Rules</h2>
+      <button class="btn-primary" onclick="openGrammarForm()" style="margin-bottom: 28px;">➕ Add Rule</button>
+      <div id="grammarList"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+// Application JavaScript code here
+// ... (insert your existing JavaScript from the file)
+</script>
+
+</body>
+</html>
