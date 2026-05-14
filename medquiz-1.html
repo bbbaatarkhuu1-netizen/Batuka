@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Клиникийн Асуултууд</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --sky: #38BDF8;
+    --sky-light: #E0F7FF;
+    --mint: #34D399;
+    --mint-light: #D1FAE5;
+    --sun: #FCD34D;
+    --sun-light: #FEF9C3;
+    --coral: #FB7185;
+    --coral-light: #FFE4E6;
+    --purple: #A78BFA;
+    --purple-light: #EDE9FE;
+    --ink: #1E293B;
+    --ink-soft: #475569;
+    --bg: #F0FBFF;
+    --white: #FFFFFF;
+    --border: #CBD5E1;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px 60px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Decorative blobs */
+  body::before, body::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    pointer-events: none;
+  }
+  body::before {
+    width: 500px; height: 500px;
+    background: rgba(56,189,248,0.15);
+    top: -100px; right: -100px;
+  }
+  body::after {
+    width: 400px; height: 400px;
+    background: rgba(52,211,153,0.12);
+    bottom: -80px; left: -80px;
+  }
+
+  .wrapper { width: 100%; max-width: 680px; position: relative; z-index: 1; }
+
+  /* ===== HEADER ===== */
+  .header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: white;
+    border: 2px solid var(--sky);
+    color: #0284C7;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 12px rgba(56,189,248,0.2);
+  }
+
+  .badge .pulse {
+    width: 7px; height: 7px;
+    background: var(--sky);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.6; }
+  }
+
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+
+  .header p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+
+  /* ===== PROGRESS ===== */
+  .progress-bar-wrap {
+    background: white;
+    border-radius: 20px;
+    padding: 16px 22px;
+    margin-bottom: 28px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .progress-info {
+    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+    min-width: 80px;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 10px;
+    background: #E2E8F0;
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sky), var(--mint));
+    border-radius: 100px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .progress-dots {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .pdot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #E2E8F0;
+    transition: all 0.3s ease;
+  }
+  .pdot.done { background: var(--mint); }
+  .pdot.active { background: var(--sky); transform: scale(1.3); }
+
+  /* ===== QUESTION SLIDE ===== */
+  .q-slide { display: none; animation: fadeSlide 0.4s ease both; }
+  .q-slide.active { display: block; }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Category tag */
+  .cat-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+  }
+
+  .cat-tag.heart { background: var(--coral-light); color: #E11D48; }
+  .cat-tag.ethics { background: var(--purple-light); color: #7C3AED; }
+
+  /* Question card */
+  .q-card {
+    background: white;
+    border-radius: 24px;
+    padding: 28px 30px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    border: 1.5px solid rgba(203,213,225,0.5);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .q-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--sky), var(--mint), var(--sun));
+  }
+
+  .q-num {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #94A3B8;
+    margin-bottom: 12px;
+  }
+
+  .q-context {
+    font-size: 14.5px;
+    line-height: 1.85;
+    color: #334155;
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1.5px dashed #E2E8F0;
+  }
+
+  .q-main {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    background: white;
+    border: 2px solid #E2E8F0;
+    border-radius: 16px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+    width: 100%;
+    font-family: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .opt::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--sky-light);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .opt:hover:not(:disabled)::before { opacity: 1; }
+  .opt:hover:not(:disabled) { border-color: var(--sky); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(56,189,248,0.2); }
+  .opt:disabled { cursor: default; }
+
+  .opt.correct { border-color: var(--mint); background: var(--mint-light); box-shadow: 0 4px 16px rgba(52,211,153,0.25); }
+  .opt.correct::before { display: none; }
+  .opt.wrong { border-color: var(--coral); background: var(--coral-light); }
+  .opt.wrong::before { display: none; }
+  .opt.dimmed { opacity: 0.35; }
+
+  .ltr {
+    width: 32px; height: 32px;
+    border-radius: 10px;
+    background: #F1F5F9;
+    color: #64748B;
+    font-size: 12px;
+    font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    position: relative;
+    z-index: 1;
+  }
+  .opt:hover:not(:disabled) .ltr { background: var(--sky); color: white; }
+  .opt.correct .ltr { background: var(--mint); color: white; }
+  .opt.wrong .ltr { background: var(--coral); color: white; }
+
+  .opt-text {
+    font-size: 14px;
+    line-height: 1.55;
+    color: #334155;
+    font-weight: 600;
+    padding-top: 5px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Explanation */
+  .explanation {
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    animation: expIn 0.4s ease both;
+    display: none;
+    margin-bottom: 14px;
+    border: 1.5px solid rgba(203,213,225,0.5);
+  }
+  .explanation.show { display: block; }
+
+  @keyframes expIn {
+    from { opacity: 0; transform: translateY(18px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .exp-top {
+    padding: 18px 24px;
+    background: linear-gradient(135deg, #10B981, #059669);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .exp-icon {
+    width: 38px; height: 38px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .exp-top-text .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 800; color: rgba(255,255,255,0.75); }
+  .exp-top-text .title { font-size: 14px; font-weight: 800; color: white; line-height: 1.4; margin-top: 2px; }
+
+  .exp-body { padding: 22px 26px; }
+
+  .exp-section { margin-bottom: 18px; }
+  .exp-section:last-child { margin-bottom: 0; }
+
+  .exp-sec-title {
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #94A3B8;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .exp-sec-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #F1F5F9;
+  }
+
+  .exp-text { font-size: 14px; line-height: 1.8; color: #374151; font-weight: 500; }
+
+  .bullet-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .bi {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #475569;
+    padding: 10px 14px;
+    background: #F8FAFC;
+    border-radius: 12px;
+    font-weight: 500;
+    border: 1.5px solid #F1F5F9;
+  }
+
+  .bi .bil {
+    font-size: 11px;
+    font-weight: 900;
+    color: var(--sky);
+    min-width: 22px;
+    padding-top: 1px;
+    flex-shrink: 0;
+  }
+
+  .bi.is-correct { background: var(--mint-light); border-color: #A7F3D0; }
+  .bi.is-correct .bil { color: #059669; }
+
+  .conclusion {
+    margin-top: 14px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, var(--sun-light), #FEF3C7);
+    border-radius: 14px;
+    font-size: 13px;
+    line-height: 1.75;
+    color: #92400E;
+    font-weight: 600;
+    border: 1.5px solid #FDE68A;
+  }
+
+  /* ===== BOTTOM BUTTONS ===== */
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .btn-reset {
+    flex: 0 0 auto;
+    padding: 13px 20px;
+    background: #F1F5F9;
+    color: #64748B;
+    border: 2px solid #E2E8F0;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+  }
+  .btn-reset.show { display: block; }
+  .btn-reset:hover { background: #E2E8F0; color: var(--ink); }
+
+  .btn-next {
+    flex: 1;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, var(--sky), #0EA5E9);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+    box-shadow: 0 4px 16px rgba(56,189,248,0.4);
+  }
+  .btn-next.show { display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(56,189,248,0.5); }
+
+  .btn-next svg { width: 18px; height: 18px; }
+
+  /* ===== FINAL SCREEN ===== */
+  .final {
+    display: none;
+    text-align: center;
+    animation: fadeSlide 0.5s ease both;
+  }
+  .final.show { display: block; }
+
+  .final-card {
+    background: white;
+    border-radius: 28px;
+    padding: 48px 36px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.09);
+    border: 1.5px solid rgba(203,213,225,0.5);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .final-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--sky), var(--mint), var(--sun), var(--coral));
+  }
+
+  .trophy { font-size: 64px; margin-bottom: 16px; display: block; animation: bounce 0.8s ease; }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    40% { transform: translateY(-20px); }
+    60% { transform: translateY(-10px); }
+  }
+
+  .final h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .final p { font-size: 15px; color: var(--ink-soft); font-weight: 600; margin-bottom: 28px; }
+
+  .score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--mint-light);
+    color: #059669;
+    font-size: 22px;
+    font-weight: 900;
+    padding: 10px 24px;
+    border-radius: 100px;
+    border: 2px solid #A7F3D0;
+    margin-bottom: 32px;
+  }
+
+  .btn-restart {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--sky), #0EA5E9);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(56,189,248,0.35);
+    transition: all 0.2s;
+  }
+  .btn-restart:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(56,189,248,0.45); }
+
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="badge"><span class="pulse"></span> Эмч мэргэжил</div>
+    <h1>Клиникийн Асуултууд</h1>
+    <p>Асуулт бүрийг анхааралтай уншиж, хариулаарай.</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar-wrap">
+    <div class="progress-info" id="progressInfo">Асуулт 1 / 2</div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+    <div class="progress-dots" id="progressDots">
+      <div class="pdot active" id="dot0"></div>
+      <div class="pdot" id="dot1"></div>
+      <div class="pdot" id="dot2"></div>
+    </div>
+  </div>
+
+  <!-- ===== АСУУЛТ 1 ===== -->
+  <div class="q-slide active" id="slide0">
+    <div class="cat-tag heart">❤️ Зүрх судасны эмгэг</div>
+
+    <div class="q-card">
+      <div class="q-num">Асуулт #1</div>
+      <div class="q-context">
+        62 настай эрэгтэй ачааллын үед амьсгаадалт нэмэгдэж байгаа гэсэн зовуурьтайгаар эмчид ханджээ. Бие махбодын үзлэгээр гүрээний судасны лугшилт хүчтэй (bounding carotid pulse) ба өвчүүний зүүн ирмэгээр хамгийн сайн сонсогдох өндөр давтамжтай, исгэрсэн мэт, сулрах диастолын шуугиан (blowing, decrescendo diastolic murmur) илэрсэн. Артерийн даралт нь 150/50 мм м.у.б байна.
+      </div>
+      <div class="q-main">
+        Энэ өвчтөнд зүүн ховдлын даралт-эзэлхүүний гогцоонд (pressure-volume loop) дараах өөрчлөлтүүдийн аль нь хамгийн магадлалтай ажиглагдах вэ?
+      </div>
+    </div>
+
+    <div class="options" id="opts0">
+      <button class="opt" data-letter="A" onclick="pick(0,this,false)"><span class="ltr">A</span><span class="opt-text">Гогцоо зүүн тийш шилжиж, диастолын эцсийн эзэлхүүн багасах.</span></button>
+      <button class="opt" data-letter="B" onclick="pick(0,this,false)"><span class="ltr">B</span><span class="opt-text">Систолын эцсийн эзэлхүүн нэмэгдэж, шахалтын эзэлхүүн (stroke volume) багасах.</span></button>
+      <button class="opt" data-letter="C" onclick="pick(0,this,true)"><span class="ltr">C</span><span class="opt-text">Диастолын эцсийн эзэлхүүн нэмэгдэж, изоволюметрик сулрал (isovolumetric relaxation) алдагдах.</span></button>
+      <button class="opt" data-letter="D" onclick="pick(0,this,false)"><span class="ltr">D</span><span class="opt-text">Диастолын эцсийн эзэлхүүн багассан хайрцаг хэлбэрийн гогцоо.</span></button>
+      <button class="opt" data-letter="E" onclick="pick(0,this,false)"><span class="ltr">E</span><span class="opt-text">Гогцоо баруун тийш шилжиж, судасны цохилтын даралт хэвийн байх.</span></button>
+      <button class="opt" data-letter="F" onclick="pick(0,this,false)"><span class="ltr">F</span><span class="opt-text">Дараах ачаалал (afterload) нэмэгдэж, систолын дээд даралт ихсэх.</span></button>
+    </div>
+
+    <div class="explanation" id="exp0">
+      <div class="exp-top">
+        <div class="exp-icon">✓</div>
+        <div class="exp-top-text">
+          <div class="label">Зөв хариулт</div>
+          <div class="title">C — Диастолын эцсийн эзэлхүүн нэмэгдэж, изоволюметрик сулрал алдагдах</div>
+        </div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-section">
+          <div class="exp-sec-title">Тайлбар</div>
+          <div class="exp-text">Өвчтөний шинж тэмдэг (диастолын шуугиан болон даралтын зөрүү их байх) нь <strong>аортын хавхлагын дутагдлыг</strong> илтгэж байна. Энэ үед цус зүүн ховдол руу буцаж урсдаг тул изоволюметрик сулралын үе шат байхгүй болж, диастолын эцсийн эзэлхүүн нэмэгддэг.</div>
+        </div>
+        <div class="exp-section">
+          <div class="exp-sec-title">Бусад сонголтууд</div>
+          <div class="bullet-list">
+            <div class="bi"><span class="bil">A</span><span>Гогцоо зүүн тийш шилжиж, диастолын эцсийн эзэлхүүн багасах нь урд ачаалал буурсантай (цус алдалт, шингэн дутагдал, митрал хавхлагын нарийсал) холбоотой.</span></div>
+            <div class="bi"><span class="bil">B</span><span>Систолын эцсийн эзэлхүүн нэмэгдэж, stroke volume багасах нь систолын зүрхний дутагдал эсвэл хэт ихэссэн хойд ачааллын шинж.</span></div>
+            <div class="bi is-correct"><span class="bil">C ✓</span><span><strong>Зөв хариулт.</strong> Аортын хавхлагын дутагдлын үед цус зүүн ховдол руу буцаж урсдаг тул изоволюметрик сулрал алдагдаж, диастолын эцсийн эзэлхүүн нэмэгддэг.</span></div>
+            <div class="bi"><span class="bil">D</span><span>Диастолын эцсийн эзэлхүүн багассан хайрцаг хэлбэрийн гогцоо нь митрал хавхлагын нарийсалтад (mitral stenosis) тохирно.</span></div>
+            <div class="bi"><span class="bil">E</span><span>Гогцоо баруун тийш шилжих нь эзэлхүүн ихэсснийг илтгэнэ, гэхдээ аортын хавхлагын дутагдалд даралтын зөрүү заавал ихэсдэг.</span></div>
+            <div class="bi"><span class="bil">F</span><span>Дараах ачаалал нэмэгдэж, систолын дээд даралт ихсэх нь аортын хавхлагын нарийсалтад (aortic stenosis) тохирно.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-reset" id="reset0" onclick="resetSlide(0)">↺ Дахин</button>
+      <button class="btn-next" id="next0" onclick="goNext(0)">
+        Дараагийн асуулт
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== АСУУЛТ 2 ===== -->
+  <div class="q-slide" id="slide1">
+    <div class="cat-tag ethics">⚖️ Эмнэлгийн ёс зүй</div>
+
+    <div class="q-card">
+      <div class="q-num">Асуулт #2</div>
+      <div class="q-context">
+        16 настай охин сарын тэмдэг нь хоёр удаа тасарсан, өглөөгүүр дотор нь эвгүйрхдэг гэсэн зовуурьтайгаар эмчид ханджээ. Шээсээр жирэмсэн эсэхийг шалгах тест эерэг гарсан байна. Тэрээр жирэмслэлтээ үргэлжлүүлэх бодолтой байгаагаа эмчид хэлсэн боловч эцэг эх нь мэдчих вий гэхээс маш их айж байгаа аж. Охин эмнэлгийн бүртгэл, мэдээллийг нь нууцалж өгөхийг эмчээс хүсэв.
+      </div>
+      <div class="q-main">
+        Энэ тохиолдолд доорх хариултуудын аль нь хамгийн тохиромжтой вэ?
+      </div>
+    </div>
+
+    <div class="options" id="opts1">
+      <button class="opt" data-letter="A" onclick="pick(1,this,false)"><span class="ltr">A</span><span class="opt-text">Эцэг эхийн зөвшөөрөлгүйгээр тусламж үзүүлэхээс татгалзах.</span></button>
+      <button class="opt" data-letter="B" onclick="pick(1,this,false)"><span class="ltr">B</span><span class="opt-text">Хүүхдийн эцгийг байлцуулахыг шаардах.</span></button>
+      <button class="opt" data-letter="C" onclick="pick(1,this,false)"><span class="ltr">C</span><span class="opt-text">Түүний асаргааг зохицуулахын тулд шүүхийн шийдвэр авах.</span></button>
+      <button class="opt" data-letter="D" onclick="pick(1,this,false)"><span class="ltr">D</span><span class="opt-text">Насанд хүрээгүй тул эцэг эхэд нь нэн даруй мэдэгдэх.</span></button>
+      <button class="opt" data-letter="E" onclick="pick(1,this,true)"><span class="ltr">E</span><span class="opt-text">Эцэг эхдээ хэлэхийг нь дэмжих, гэхдээ нууцлалыг хадгалах (Encourage her to tell her parents but maintain confidentiality).</span></button>
+      <button class="opt" data-letter="F" onclick="pick(1,this,false)"><span class="ltr">F</span><span class="opt-text">Зөвхөн хүндрэл гарсан тохиолдолд л эцэг эхэд нь хэлэх.</span></button>
+    </div>
+
+    <div class="explanation" id="exp1">
+      <div class="exp-top">
+        <div class="exp-icon">✓</div>
+        <div class="exp-top-text">
+          <div class="label">Зөв хариулт</div>
+          <div class="title">E — Эцэг эхдээ хэлэхийг нь дэмжих, гэхдээ нууцлалыг хадгалах</div>
+        </div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-section">
+          <div class="exp-sec-title">Тайлбар</div>
+          <div class="exp-text">Энэ бол хамгийн зөв үйлдэл юм. Энэ нь эмчийн өвчтөнийг дэмжих ёс зүйн үүрэг болон нууцлалыг хадгалж, шаардлагатай төрөхийн өмнөх тусламж үйлчилгээг үзүүлэх хууль ёсны шаардлага хоёрыг тэнцвэржүүлдэг.</div>
+        </div>
+        <div class="exp-section">
+          <div class="exp-sec-title">Бусад сонголтууд</div>
+          <div class="bullet-list">
+            <div class="bi"><span class="bil">A</span><span>Тусламж үзүүлэхээс татгалзах нь өвчтөнийг орхиж буй үйлдэл бөгөөд ёс зүйд нийцэхгүй.</span></div>
+            <div class="bi"><span class="bil">B</span><span>Эх нь төрөхийн өмнөх тусламж авахад эцэг нь заавал байх шаардлагагүй.</span></div>
+            <div class="bi"><span class="bil">C</span><span>Шүүхийн шийдвэр шаардлагагүй — энэ механизм нь үр хөндүүлэх хүсэлтэй насанд хүрээгүй хүүхдүүдэд л хамааралтай.</span></div>
+            <div class="bi"><span class="bil">D</span><span>Зөвшөөрөлгүйгээр эцэг эхэд мэдэгдэх нь нууцлалын эрхийг зөрчиж, HIPAA-г зөрчиж болзошгүй.</span></div>
+            <div class="bi is-correct"><span class="bil">E ✓</span><span><strong>Зөв хариулт.</strong> Ёс зүй болон хуулийн шаардлагыг тэнцвэржүүлсэн хамгийн зөв үйлдэл.</span></div>
+            <div class="bi"><span class="bil">F</span><span>Нууцлал нь зөвхөн хүндрэл гарахад биш, бүхий л ердийн үзлэгүүдэд хамааралтай.</span></div>
+          </div>
+          <div class="conclusion"><strong>Дүгнэлт:</strong> АНУ-ын бараг бүх харьяалалд жирэмслэлт нь насанд хүрээгүй хүүхдэд эцэг эхдээ мэдэгдэхгүйгээр төрөхийн өмнөх тусламж авах, нууцлалаа хадгалах хууль ёсны эрхийг олгодог. Эмч гэр бүлийн дэмжлэг авахад нь туслах ёстой ч өвчтөн хүссэн тохиолдолд түүний нууцлалын эрхийг хүндэтгэх ёстой.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-reset" id="reset1" onclick="resetSlide(1)">↺ Дахин</button>
+      <button class="btn-next" id="next1" onclick="goNext(1)">
+        Дараагийн асуулт
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== АСУУЛТ 3 ===== -->
+  <div class="q-slide" id="slide2">
+    <div class="cat-tag" style="background:#FEF9C3;color:#92400E;">🦴 Ясны эмгэг судлал</div>
+
+    <div class="q-card">
+      <div class="q-num">Асуулт #3</div>
+      <div class="q-context">
+        4 настай хүү яс нь дахин дахин хугардаг, өсөлт хөгжилт хоцрогдсон гэх зовуурьтайгаар эмчид ирсэн. Бие махбодын үзлэгээр элэг, дэлүү томорсон (hepatosplenomegaly) болон тархины мэдрэлийн саажилт илэрч байв. Рентген зурагт араг ясны систем бүхэлдээ тэгш хэмтэй нягтарсан (sclerosis) бөгөөд "яс доторх яс" (bone-in-bone) мэт дүр төрх ажиглагдсан байна. Үндсэн эсийн согогийг засахын тулд чөмөг шилжүүлэн суулгахаар төлөвлөжээ.
+      </div>
+      <div class="q-main">
+        Энэхүү өвчтөний эмгэг байдалд нөлөөлж буй гэмтэлтэй эсүүд ясыг эргэн шимэгдүүлэхэд (resorption) шаардлагатай хүчиллэг орчныг бүрдүүлэхийн тулд хэвийн үедээ доорх ферментүүдийн алинд нь тулгуурладаг вэ?
+      </div>
+    </div>
+
+    <div class="options" id="opts2">
+      <button class="opt" data-letter="A" onclick="pick(2,this,false)"><span class="ltr">A</span><span class="opt-text">Лизил оксидаза (Lysyl oxidase)</span></button>
+      <button class="opt" data-letter="B" onclick="pick(2,this,false)"><span class="ltr">B</span><span class="opt-text">Ксантин оксидаза (Xanthine oxidase)</span></button>
+      <button class="opt" data-letter="C" onclick="pick(2,this,false)"><span class="ltr">C</span><span class="opt-text">Шүлтлэг фосфатаза (Alkaline phosphatase)</span></button>
+      <button class="opt" data-letter="D" onclick="pick(2,this,false)"><span class="ltr">D</span><span class="opt-text">Тартратад тэсвэртэй хүчлийн фосфатаза (TRAP)</span></button>
+      <button class="opt" data-letter="E" onclick="pick(2,this,true)"><span class="ltr">E</span><span class="opt-text">Карбоангидраза II (Carbonic anhydrase II)</span></button>
+      <button class="opt" data-letter="F" onclick="pick(2,this,false)"><span class="ltr">F</span><span class="opt-text">Пролил гидроксилаза (Prolyl hydroxylase)</span></button>
+      <button class="opt" data-letter="G" onclick="pick(2,this,false)"><span class="ltr">G</span><span class="opt-text">Миелопероксидаза (Myeloperoxidase)</span></button>
+    </div>
+
+    <div class="explanation" id="exp2">
+      <div class="exp-top">
+        <div class="exp-icon">✓</div>
+        <div class="exp-top-text">
+          <div class="label">Зөв хариулт</div>
+          <div class="title">E — Карбоангидраза II (Carbonic anhydrase II)</div>
+        </div>
+      </div>
+      <div class="exp-body">
+        <div class="exp-section">
+          <div class="exp-sec-title">Тайлбар</div>
+          <div class="exp-text">Энэхүү өвчтөнд <strong>остеопетроз (osteopetrosis)</strong> буюу "гантиг ясны өвчин" илэрч байна. Энэ нь остеокласт эсийн үйл ажиллагааны дутагдлаас үүдэлтэй. Остеокласт эсүүд нь карбоангидраза II ферментийг ашиглан CO₂ болон H₂O-г H⁺ ба HCO₃⁻ болгон хувиргадаг. Устөрөгчийн ионууд (H⁺) нь ясны эрдэс бүрэлдэхүүнийг уусгахын тулд шимэгдэлтийн хөндий рүү (Howship lacuna) шахагддаг. Энэ ферментийн дутагдал нь ясны шимэгдэлтийг саатуулж, яс хэт нягтарч, хэврэг болоход хүргэдэг.</div>
+        </div>
+        <div class="exp-section">
+          <div class="exp-sec-title">Бусад сонголтууд</div>
+          <div class="bullet-list">
+            <div class="bi"><span class="bil">A</span><span><strong>Лизил оксидаза:</strong> Коллаген болон эластин ширхгүүдийг хооронд нь холбоход чухал үүрэгтэй эс гаднах фермент. Ясны матрицыг тогтворжуулахад оролцдог боловч шимэгдэлтийн хүчиллэг орчинд хамааралгүй.</span></div>
+            <div class="bi"><span class="bil">B</span><span><strong>Ксантин оксидаза:</strong> Пурины солилцоонд оролцож, гипоксантиныг шээсний хүчил болгон хувиргадаг. Тулай өвчний үед хэрэглэдэг аллопуринол эмийн бай болдог бөгөөд остеокластад үүрэггүй.</span></div>
+            <div class="bi"><span class="bil">C</span><span><strong>Шүлтлэг фосфатаза:</strong> Остеокласт биш, харин остеобласт (яс үүсгэгч эс)-тай холбоотой фермент. Ясны эрдэсжилтийг дэмжих шүлтлэг орчныг бүрдүүлдэг — остеокласт хүчиллэг орчин шаарддагтай эсрэгцдэг.</span></div>
+            <div class="bi"><span class="bil">D</span><span><strong>TRAP:</strong> Остеокластыг тодорхойлох гистологийн маркер. Ясны органик матрицыг задлахад оролцдог ч протон (H⁺) үүсгэх үндсэн фермент биш.</span></div>
+            <div class="bi is-correct"><span class="bil">E ✓</span><span><strong>Зөв хариулт.</strong> Карбоангидраза II нь остеокласт эсийн ясны шимэгдэлтэд шаардлагатай H⁺ ионыг үүсгэх гол фермент. Түүний мутаци нь остеопетрозыг үүсгэдэг.</span></div>
+            <div class="bi"><span class="bil">F</span><span><strong>Пролил гидроксилаза:</strong> Коллагены нийлэгжлийн явцад пролины үлдэгдлийг гидроксилжуулахад шаардлагатай, С витаминаас хамааралтай фермент. Остеобласт дотор явагддаг.</span></div>
+            <div class="bi"><span class="bil">G</span><span><strong>Миелопероксидаза:</strong> Нейтрофил эсүүдэд байдаг, нянгийн эсрэг идэвхт хүчилтөрөгчийн төрлүүдийг үүсгэдэг фермент. Остеокластад үүрэггүй.</span></div>
+          </div>
+          <div class="conclusion"><strong>Дүгнэлт:</strong> Остеопетроз нь остеокласт эсийн ясны шимэгдэлт явуулж чадахгүй байгаагаас үүсдэг бөгөөд ихэвчлэн карбоангидраза II ферментийн мутациас болдог. Энэ фермент нь ясны эрдсийг уусгахын тулд остеокластаас ялгарах H⁺ ионыг үүсгэхэд нэн чухал үүрэгтэй.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-reset" id="reset2" onclick="resetSlide(2)">↺ Дахин</button>
+      <button class="btn-next" id="next2" onclick="goFinish()">
+        Дүн үзэх
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== FINAL ===== -->
+  <div class="final" id="finalScreen">
+    <div class="final-card">
+      <span class="trophy">🏆</span>
+      <h2>Амжилттай дууслаа!</h2>
+      <p>Та бүх асуултыг хариулж дууслаа.</p>
+      <div class="score-badge" id="scoreBadge">✓ 0 / 2 зөв</div>
+      <button class="btn-restart" onclick="restartAll()">↺ Дахин эхлэх</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const TOTAL = 3;
+  const correctLetters = ['C', 'E', 'E'];
+  const answered = [false, false, false];
+  const gotCorrect = [false, false, false];
+  let current = 0;
+
+  function updateProgress() {
+    const pct = (current / TOTAL) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressInfo').textContent = `Асуулт ${Math.min(current+1, TOTAL)} / ${TOTAL}`;
+
+    for (let i = 0; i < TOTAL; i++) {
+      const dot = document.getElementById('dot' + i);
+      dot.className = 'pdot';
+      if (i < current) dot.classList.add('done');
+      else if (i === current) dot.classList.add('active');
+    }
+  }
+
+  function pick(slideIdx, btn, isCorrect) {
+    if (answered[slideIdx]) return;
+    answered[slideIdx] = true;
+    gotCorrect[slideIdx] = isCorrect;
+
+    document.querySelectorAll(`#opts${slideIdx} .opt`).forEach(b => {
+      b.disabled = true;
+      if (b === btn) {
+        b.classList.add(isCorrect ? 'correct' : 'wrong');
+      } else if (b.dataset.letter === correctLetters[slideIdx]) {
+        b.classList.add('correct');
+      } else {
+        b.classList.add('dimmed');
+      }
+    });
+
+    const exp = document.getElementById(`exp${slideIdx}`);
+    exp.classList.add('show');
+
+    document.getElementById(`reset${slideIdx}`).classList.add('show');
+    document.getElementById(`next${slideIdx}`).classList.add('show');
+
+    setTimeout(() => {
+      exp.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 200);
+  }
+
+  function resetSlide(slideIdx) {
+    answered[slideIdx] = false;
+    gotCorrect[slideIdx] = false;
+    document.querySelectorAll(`#opts${slideIdx} .opt`).forEach(b => {
+      b.disabled = false;
+      b.classList.remove('correct', 'wrong', 'dimmed');
+    });
+    document.getElementById(`exp${slideIdx}`).classList.remove('show');
+    document.getElementById(`reset${slideIdx}`).classList.remove('show');
+    document.getElementById(`next${slideIdx}`).classList.remove('show');
+  }
+
+  function goNext(slideIdx) {
+    if (!answered[slideIdx]) return;
+    document.getElementById(`slide${slideIdx}`).classList.remove('active');
+    current = slideIdx + 1;
+    updateProgress();
+    const nextSlide = document.getElementById(`slide${current}`);
+    if (nextSlide) {
+      nextSlide.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function goFinish() {
+    if (!answered[2]) return;
+    document.getElementById('slide2').classList.remove('active');
+    current = TOTAL;
+    updateProgress();
+
+    const correctCount = gotCorrect.filter(Boolean).length;
+    document.getElementById('scoreBadge').textContent = `✓ ${correctCount} / ${TOTAL} зөв`;
+    document.getElementById('finalScreen').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function restartAll() {
+    current = 0;
+    answered.fill(false);
+    gotCorrect.fill(false);
+
+    for (let i = 0; i < TOTAL; i++) resetSlide(i);
+
+    document.getElementById('finalScreen').classList.remove('show');
+    document.getElementById('slide0').classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  updateProgress();
+</script>
+</body>
+</html>
